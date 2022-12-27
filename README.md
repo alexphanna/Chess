@@ -1,2 +1,2 @@
 # Chess
-C# Console App
+console app chess game in C#
