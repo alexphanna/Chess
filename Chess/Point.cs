@@ -26,13 +26,13 @@ namespace Chess
             {
                 if (x % 2 == 0)
                 {
-                    if (y % 2 == 0) return ConsoleColor.Blue;
-                    else return ConsoleColor.DarkBlue;
+                    if (y % 2 == 0) return ConsoleColor.DarkBlue;
+                    else return ConsoleColor.Blue;
                 }
                 else
                 {
-                    if (y % 2 == 0) return ConsoleColor.DarkBlue;
-                    else return ConsoleColor.Blue;
+                    if (y % 2 == 0) return ConsoleColor.Blue;
+                    else return ConsoleColor.DarkBlue;
                 }
             }
         }
@@ -42,14 +42,18 @@ namespace Chess
             {
                 foreach (Piece piece in Board.pieces)
                 {
-                    if (x == piece.Point.X && y == piece.Point.Y) return piece;
+                    if (piece != null && x == piece.Point.X && y == piece.Point.Y) return piece;
                 }
                 return null;
             }
         }
+        public override bool Equals(object obj)
+        {
+            return ((Point)obj).X == X && ((Point)obj).Y == Y;
+        }
         public void SetCursorPosition()
         {
-            Console.SetCursorPosition(x * 2, y);
+            Console.SetCursorPosition((x - 1) * 2, 8 - y);
         }
     }
 }
