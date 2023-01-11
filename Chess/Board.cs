@@ -4,7 +4,7 @@ namespace Chess
 {
     internal class Board
     {
-        public static Piece[] pieces = new Piece[0];
+        private Piece[] pieces = new Piece[0];
         public Board()
         {
             for (int y = 1; y <= 8; y += 7)
@@ -39,6 +39,7 @@ namespace Chess
             foreach (Piece piece in pieces)
             {
                 Console.BackgroundColor = piece.Point.Color;
+                if (piece.Type != null && piece.Type.Equals("king") && piece.IsUnderAttack()) Console.BackgroundColor = ConsoleColor.Red;
                 Console.ForegroundColor = piece.Color.Item2;
                 piece.Point.SetCursorPosition();
                 Console.Write(piece);
@@ -53,6 +54,18 @@ namespace Chess
             piece.Point.SetCursorPosition();
             Console.Write(piece);
         }
+        public void Add(Point[] points)
+        {
+            if (points == null) return;
+            foreach (Point point in points)
+            {
+                Console.BackgroundColor = point.Color;
+                Console.ForegroundColor = ConsoleColor.Gray;
+                point.SetCursorPosition();
+                if (Find(point) == null) Console.Write("●");
+                else Console.Write(Find(point));
+            }
+        }
         public void Remove(Point point)
         {
             Piece[] temp = new Piece[pieces.Length - 1];
@@ -63,17 +76,33 @@ namespace Chess
             }
             pieces = temp;
         }
-        public void Add(Point[] points)
+        public Piece Find(Point point = null, bool? color = null, string type = null)
         {
-            if (points == null) return;
-            foreach (Point point in points)
+            foreach (Piece piece in pieces)
             {
-                Console.BackgroundColor = point.Color;
-                Console.ForegroundColor = ConsoleColor.Gray;
-                point.SetCursorPosition();
-                if (point.Piece == null) Console.Write("●");
-                else Console.Write(point.Piece);
+                if (piece.Color.Item1 == color || color == null)
+                {
+                    if (piece.Point.Equals(point) || point == null)
+                    {
+                        if (piece.GetType().Name == type || type == null) return piece;
+                    }
+                }
             }
+            return null;
+        }
+        public bool Exists(Point point = null, bool? color = null, string type = null)
+        {
+            foreach (Piece piece in pieces)
+            {
+                if (piece.Color.Item1 == color || color == null)
+                {
+                    if (piece.Point.Equals(point) || point == null)
+                    {
+                        if (piece.GetType().Name == type || type == null) return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }

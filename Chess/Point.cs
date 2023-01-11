@@ -36,20 +36,9 @@ namespace Chess
                 }
             }
         }
-        public Piece Piece
+        public bool Equals(Point point)
         {
-            get
-            {
-                foreach (Piece piece in Board.pieces)
-                {
-                    if (piece != null && x == piece.Point.X && y == piece.Point.Y) return piece;
-                }
-                return null;
-            }
-        }
-        public override bool Equals(object obj)
-        {
-            return ((Point)obj).X == X && ((Point)obj).Y == Y;
+            return point.X == X && point.Y == Y;
         }
         public void SetCursorPosition()
         {

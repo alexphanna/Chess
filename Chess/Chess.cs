@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Chess
 {
-    internal class Program
+    internal class Chess
     {
-        public static Board board = null;
+        public static Board board = new Board();
         public static int turn = 0;
+        public static bool check = false;
         public static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -14,7 +16,8 @@ namespace Chess
             Console.SetWindowSize(16, 8);
             Console.SetBufferSize(16, 8);
 
-            board = new Board();
+            board;
+            
             Point cursor = new Point(1, 1);
             Piece piece = null;
             Point[] moves = new Point[0];
@@ -50,9 +53,9 @@ namespace Chess
                         if (index < moves.Length - 1) index++;
                         else index = 0;
                         break;
-                    case ConsoleKey.Enter when moves.Length == 0 && cursor.Piece != null:
-                        piece = cursor.Piece; 
-                        moves = cursor.Piece.CurrentMoves;
+                    case ConsoleKey.Enter when moves.Length == 0 && board.Exists(cursor) && board.Find(cursor).Color.Item1 == (turn % 2 == 0):
+                        piece = board.Find(cursor); 
+                        moves = board.Find(cursor).CurrentMoves;
                         index = 0;
                         break;
                     case ConsoleKey.Enter when moves.Length > 0:
@@ -74,13 +77,13 @@ namespace Chess
 
                 Console.BackgroundColor = ConsoleColor.DarkYellow;
                 cursor.SetCursorPosition();
-                if (moves.Length == 0 && cursor.Piece != null)
+                if (moves.Length == 0 && board.Exists(cursor))
                 {
-                    Console.ForegroundColor = cursor.Piece.Color.Item2;
-                    Console.Write(cursor.Piece);
-                    board.Add(cursor.Piece.CurrentMoves);
+                    Console.ForegroundColor = board.Find(cursor).Color.Item2;
+                    Console.Write(board.Find(cursor));
+                    if (board.Find(cursor).Color.Item1 == (turn % 2 == 0)) board.Add(board.Find(cursor).CurrentMoves);
                 }
-                else if (moves.Length > 0 && cursor.Piece != null) Console.Write(cursor.Piece);
+                else if (moves.Length > 0 && board.Exists(cursor)) Console.Write(board.Find(cursor));
                 else if (moves.Length > 0) Console.Write("●");
                 else Console.Write("  ");
             }
